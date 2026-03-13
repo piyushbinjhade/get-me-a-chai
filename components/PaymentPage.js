@@ -1,9 +1,10 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
+import Image from 'next/image'
 import Script from 'next/script'
 import { fetchuser, fetchpayments, initiate } from '@/actions/useractions'
 import { useSearchParams } from 'next/navigation'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Bounce } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 
@@ -23,7 +24,7 @@ const PaymentPage = ({ username }) => {
   useEffect(() => {
     setIsClient(true)
     getData()
-  }, [])
+  }, [getData])
 
   useEffect(() => {
     if(searchParams.get("paymentdone") == "true"){
@@ -41,14 +42,15 @@ const PaymentPage = ({ username }) => {
   }
   router.push(`/${username}`)
 
-  }, [])
+  }, [router, searchParams, username])
 
 
   const handleChange = (e) => {
     setPaymentForm({ ...paymentform, [e.target.name]: e.target.value })
   }
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
+    if (!username) return
     try {
       const u = await fetchuser(username)
       setCurrentUser(u)
@@ -57,7 +59,7 @@ const PaymentPage = ({ username }) => {
     } catch (err) {
       // console.error("Error fetching data:", err)
     }
-  }
+  }, [username])
 
   const Pay = async (amountInSubunits) => {
     // Client-side validation
@@ -111,18 +113,22 @@ const PaymentPage = ({ username }) => {
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
 
       <div className="cover bg-red-50 relative">
-        <img
-          className='object-cover w-full h-48 md:h-[350]'
+        <Image
+          className='object-cover w-full h-48 md:h-[350px]'
           src={currentUser?.coverpic || '/default-cover.jpg'}
           alt="Cover Picture"
+          width={1800}
+          height={350}
+          priority
         />
         <div className="absolute -bottom-12 right-[32%] md:right-[44.5%] border-white border-[2px] rounded-xl">
-          <img
+          <Image
             className='rounded-xl'
             width={135}
             height={135}
             src={currentUser?.profilepic || '/default-profile.jpg'}
             alt="Profile Picture"
+            priority
           />
         </div>
       </div>
@@ -139,7 +145,7 @@ const PaymentPage = ({ username }) => {
               {payments.length === 0 ? <li>No payments yet</li> :
                 payments.map((p, i) => (
                   <li key={i} className='my-4 flex gap-2 items-center'>
-                    <img width={33} src="avatar.gif" alt="user avatar" />
+                    <Image width={33} height={33} src="/avatar.gif" alt="user avatar" />
                     <span>{p.name} paid <span className='font-bold'>₹{p.amount}</span> for {p.message}</span>
                   </li>
                 ))

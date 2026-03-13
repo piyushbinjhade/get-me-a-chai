@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { useSession, signIn, signOut } from "next-auth/react"
 import Link from 'next/link'
+import Image from 'next/image'
 
 
 const Navbar = () => {
@@ -12,7 +13,7 @@ const Navbar = () => {
 
     <nav className='bg-gray-900 text-white flex justify-between items-center px-4 md:h-16 flex-col md:flex-row'>
       <Link className="logo font-bold text-lg flex justify-center items-center" href={"/"}>
-        <img className='invertImg' src="tea.gif" width={44} alt="" />
+        <Image className='invertImg' src="/tea.gif" width={44} height={44} alt="Tea" />
         <span className='text-xl md: text-base my-3 md:my-0'>GetMeaChai</span>
       </Link>
       {/* <ul className='flex justify-between gap-4'>

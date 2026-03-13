@@ -1,10 +1,11 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
+
+export const dynamic = 'force-dynamic'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from 'next/navigation'
 import { fetchuser, profilepic } from '@/actions/useractions'
-import { ToastContainer, toast, Bounce } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { toast, Bounce } from 'react-toastify'
 
 
 // async function fetchuser(username) {
@@ -24,23 +25,28 @@ const Dashboard = () => {
     const { data: session, update } = useSession()
     const router = useRouter()
     const [form, setform] = useState({})
+    const [hasMounted, setHasMounted] = useState(false)
 
     useEffect(() => {
-        // console.log(session)
-        if (!session) {
+        setHasMounted(true)
+    }, [])
+
+    const getData = useCallback(async () => {
+        if (session && session.user && session.user.name) {
+            let u = await fetchuser(session.user.name)
+            setform(u)
+        }
+    }, [session])
+
+    useEffect(() => {
+        if (hasMounted && !session) {
             router.push('/login')
-            // const getData = async()=>{
-            // const u = await fetchuser(session.user.name)
-            // setform(u)
-        } else {
+        } else if (hasMounted && session) {
             getData()
         }
-    }, [router, session])
+    }, [router, session, getData, hasMounted])
 
-    const getData = async () => {
-        let u = await fetchuser(session.user.name)
-        setform(u)
-    }
+    if (!hasMounted) return null
 
     const handleChange = (e) => {
         setform({ ...form, [e.target.name]: e.target.value })
@@ -68,21 +74,6 @@ const Dashboard = () => {
 
     return (
         <>
-            <ToastContainer />
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-            {/* Same as */}
-            {/* <ToastContainer /> */}
             <div className='container mx-auto py-5 px-6 '>
                 <h1 className='text-center my-5 text-3xl font-bold'>Welcome to your Dashboard</h1>
 
