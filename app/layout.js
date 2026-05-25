@@ -23,8 +23,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">
+    <html lang="en" suppressHydrationWarning={true}>
+      <body className="text-white min-h-screen" suppressHydrationWarning={true}>
         <SessionWrapper>
           <ToastContainer
             position="top-right"
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
             theme="light"
           />
           <Navbar />
-          <div className="min-h-screen bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] text-white">
+          <div className="min-h-[calc(100vh-8rem)] text-white">
             {children}
           </div>
           <Footer />

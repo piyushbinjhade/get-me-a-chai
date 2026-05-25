@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 export const dynamic = 'force-dynamic'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from 'next/navigation'
-import { fetchuser, profilepic } from '@/actions/useractions'
+import { fetchuserForDashboard, profilepic } from '@/actions/useractions'
 import { toast, Bounce } from 'react-toastify'
 
 
@@ -32,9 +32,13 @@ const Dashboard = () => {
     }, [])
 
     const getData = useCallback(async () => {
-        if (session && session.user && session.user.name) {
-            let u = await fetchuser(session.user.name)
-            setform(u)
+        if (session && session.user) {
+            try {
+                let u = await fetchuserForDashboard()
+                setform(u || {})
+            } catch (err) {
+                console.error("Failed to fetch dashboard data:", err)
+            }
         }
     }, [session])
 
@@ -53,19 +57,42 @@ const Dashboard = () => {
     }
 
     const handleSubmit = async (e) => {
-        update()
-        let a = await profilepic(e, session.user.name)
-        toast('Profile Updated', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-        });
+        e.preventDefault()
+        const formData = new FormData()
+        formData.append('name', form.name || '')
+        formData.append('username', form.username || '')
+        formData.append('profilepic', form.profilepic || '')
+        formData.append('coverpic', form.coverpic || '')
+        formData.append('razorpayid', form.razorpayid || '')
+        formData.append('razorpaysecret', form.razorpaysecret || '')
+        
+        let a = await profilepic(formData)
+        if (a && a.error) {
+            toast.error(a.error, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+        } else {
+            update()
+            toast.success('Profile Updated', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+        }
     }
 
 
@@ -77,7 +104,7 @@ const Dashboard = () => {
             <div className='container mx-auto py-5 px-6 '>
                 <h1 className='text-center my-5 text-3xl font-bold'>Welcome to your Dashboard</h1>
 
-                <form className="max-w-2xl mx-auto" action={handleSubmit}>
+                <form className="max-w-2xl mx-auto" onSubmit={handleSubmit}>
 
                     <div className='my-2'>
                         <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -99,7 +126,8 @@ const Dashboard = () => {
                             type="email"
                             name='email'
                             id="email"
-                            className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            readOnly
+                            className="block w-full p-2 text-gray-400 border border-gray-300 rounded-lg bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500 text-xs cursor-not-allowed"
                         />
                     </div>
 
