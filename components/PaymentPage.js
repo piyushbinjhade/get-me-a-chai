@@ -21,6 +21,18 @@ const PaymentPage = ({ username }) => {
   })
   const [isClient, setIsClient] = useState(false) // for SSR-safe rendering
 
+  const getData = useCallback(async () => {
+    if (!username) return
+    try {
+      const u = await fetchuser(username)
+      setCurrentUser(u)
+      const dbPayments = await fetchpayments(username)
+      setPayments(dbPayments)
+    } catch (err) {
+      // console.error("Error fetching data:", err)
+    }
+  }, [username])
+
   useEffect(() => {
     setIsClient(true)
     getData()
@@ -49,27 +61,25 @@ const PaymentPage = ({ username }) => {
     setPaymentForm({ ...paymentform, [e.target.name]: e.target.value })
   }
 
-  const getData = useCallback(async () => {
-    if (!username) return
-    try {
-      const u = await fetchuser(username)
-      setCurrentUser(u)
-      const dbPayments = await fetchpayments(username)
-      setPayments(dbPayments)
-    } catch (err) {
-      // console.error("Error fetching data:", err)
-    }
-  }, [username])
 
   const Pay = async (amountInSubunits) => {
-    // Client-side validation
-    if (!paymentform.name || !paymentform.amount) {
-      alert("Name and Amount are required")
+    // Client-side validation - only name is required
+    if (!paymentform.name || paymentform.name.trim().length < 1) {
+      alert("Name is required")
       return
     }
 
-    if (!currentUser || !currentUser.razorpayid) {
-      alert("Razorpay ID not available")
+    // If custom amount is being used (Pay button), validate amount
+    // For quick buttons, amount is passed directly as amountInSubunits
+    if (!amountInSubunits || amountInSubunits < 1) {
+      alert("Valid amount is required")
+      return
+    }
+
+    const razorpayKey = currentUser?.razorpayid || process.env.NEXT_PUBLIC_KEY_ID
+
+    if (!razorpayKey) {
+      alert("Razorpay payment gateway is not configured.")
       return
     }
 
@@ -78,7 +88,7 @@ const PaymentPage = ({ username }) => {
       const orderId = order.id
 
       const options = {
-        key: currentUser.razorpayid,
+        key: razorpayKey,
         amount: amountInSubunits,
         currency: "INR",
         name: "Get Me A Chai",
@@ -97,7 +107,7 @@ const PaymentPage = ({ username }) => {
         theme: { color: "#3399cc" }
       }
 
-      const rzp1 = new Razorpay(options)
+      const rzp1 = new window.Razorpay(options)
       rzp1.open()
     } catch (err) {
       // console.error("Payment error:", err)
@@ -113,22 +123,16 @@ const PaymentPage = ({ username }) => {
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
 
       <div className="cover bg-red-50 relative">
-        <Image
+        <img
           className='object-cover w-full h-48 md:h-[350px]'
           src={currentUser?.coverpic || '/default-cover.jpg'}
           alt="Cover Picture"
-          width={1800}
-          height={350}
-          priority
         />
-        <div className="absolute -bottom-12 right-[32%] md:right-[44.5%] border-white border-[2px] rounded-xl">
-          <Image
-            className='rounded-xl'
-            width={135}
-            height={135}
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 border-white border-[2px] rounded-xl bg-slate-900 overflow-hidden shadow-xl">
+          <img
+            className='rounded-xl object-cover w-[135px] h-[135px]'
             src={currentUser?.profilepic || '/default-profile.jpg'}
             alt="Profile Picture"
-            priority
           />
         </div>
       </div>

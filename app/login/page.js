@@ -25,10 +25,10 @@ const Page = () => {
       <h1 className='text-center text-white font-bold text-3xl'>Login to Get Started</h1>
 
     {/* <div classNameName="social-login-buttons"> */}
-    <div className="flex flex-col gap-2 min-h-screen  items-center p-10">
+    <div className="flex flex-col gap-4 items-center p-10">
 
 
-      <button
+      <button onClick={() => signIn("credentials", { username: "google_user", email: "google_user@gmail.com", callbackUrl: "/dashboard" })}
         className="flex items-center text-black  w-64 bg-slate-50 border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="-0.5 0 48 48" version="1.1">
@@ -56,7 +56,7 @@ const Page = () => {
       </button>
 
 
-      <button
+      <button onClick={() => signIn("credentials", { username: "linkedin_user", email: "linkedin_user@gmail.com", callbackUrl: "/dashboard" })}
         className="flex items-center text-black w-64 bg-slate-50 border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 -2 44 44" version="1.1">
@@ -73,7 +73,7 @@ const Page = () => {
       </button>
 
 
-      <button
+      <button onClick={() => signIn("credentials", { username: "twitter_user", email: "twitter_user@gmail.com", callbackUrl: "/dashboard" })}
         className="flex items-center text-black w-64 bg-slate-50 border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 -4 48 48" version="1.1">
@@ -92,7 +92,7 @@ const Page = () => {
       </button>
 
 
-      <button
+      <button onClick={() => signIn("credentials", { username: "facebook_user", email: "facebook_user@gmail.com", callbackUrl: "/dashboard" })}
         className="flex items-center text-black w-64 bg-slate-50 border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 48 48" version="1.1">
@@ -135,7 +135,7 @@ const Page = () => {
       </button>
 
 
-      <button
+      <button onClick={() => signIn("credentials", { username: "apple_user", email: "apple_user@gmail.com", callbackUrl: "/dashboard" })}
         className="flex items-center text-black w-64 bg-slate-50 border border-gray-300 rounded-lg shadow-md max-w-xs px-6 py-2 text-sm font-medium  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
           viewBox="-1.5 0 20 20" version="1.1">

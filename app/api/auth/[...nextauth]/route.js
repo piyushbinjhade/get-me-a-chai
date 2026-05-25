@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import GitHubProvider from 'next-auth/providers/github'
+import CredentialsProvider from 'next-auth/providers/credentials'
 import User from '@/models/User';
 import connectDb from '@/db/connectDb';
 
@@ -9,22 +10,50 @@ export const authOptions = {
             clientId: process.env.GITHUB_ID,
             clientSecret: process.env.GITHUB_SECRET
         }),
+        CredentialsProvider({
+            name: "Credentials",
+            credentials: {
+                username: { label: "Username", type: "text" },
+                email: { label: "Email", type: "email" },
+            },
+            async authorize(credentials) {
+                if (!credentials || !credentials.username || !credentials.email) {
+                    return null
+                }
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                if (!emailRegex.test(credentials.email)) {
+                    console.warn("Invalid email format attempted")
+                    return null
+                }
+                return {
+                    id: credentials.username,
+                    name: credentials.username,
+                    email: credentials.email
+                }
+            }
+        })
     ],
 
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            if (account.provider == "github") {
-                await connectDb()
-                
-                // If GitHub doesn't return an email (can happen with private emails)
-                // Use a fallback or handle properly
+            await connectDb()
+            if (account.provider === "github") {
                 const userEmail = user.email || `${profile.login}@github.com`
-
-                // Check if the user already exists in the database
                 const currentUser = await User.findOne({ email: userEmail })
                 if (!currentUser) {
-                    // Create a new User
-                    const newUser = await User.create({
+                    await User.create({
+                        email: userEmail,
+                        username: (userEmail).split("@")[0],
+                    })
+                }
+                return true
+            }
+            if (account.provider === "credentials") {
+                const userEmail = user.email
+                const currentUser = await User.findOne({ email: userEmail })
+                if (!currentUser) {
+                    await User.create({
                         email: userEmail,
                         username: (userEmail).split("@")[0],
                     })

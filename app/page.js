@@ -11,14 +11,14 @@ export default function Home() {
           A crowdfunding platform for creators. Get funded by your fans and followers. Start now!
         </p>
         <p className="font-bold text-center md:text-left">
-          A place where your fans can but you a chai. Unleash the power of your fans and get your projects funded. 
+          A place where your fans can buy you a chai. Unleash the power of your fans and get your projects funded. 
         </p>
-        <div>
+        <div className="mt-4">
           
           <Link href={"/login"}>
-          <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Start Here</button></Link>
+          <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 cursor-pointer transition-all duration-300">Start Here</button></Link>
           <Link href={"/about"}>
-          <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Read More</button></Link>
+          <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 cursor-pointer transition-all duration-300">Read More</button></Link>
 
         </div>
       </div>
@@ -27,19 +27,21 @@ export default function Home() {
 
       <div className="text-white container pb-32 pt-14 mx-auto px-10">
         <h2 className="text-3xl font-bold text-center mb-14">Your Fans can buy you a Chai</h2>
-        <div className="flex gap-5 justify-around ">
+        <div className="flex gap-5 justify-around flex-col md:flex-row">
           <div className="item space-y-3 flex flex-col justify-center items-center">
             <Image className="bg-slate-400 rounded-full p-2 text-black" width={88} height={88} src="/man.gif" alt="Man" />
-            <p className="font-bold text-center">Your fans are available for you to help you</p>
+            <h3 className="font-bold text-lg text-center">Fans Want to Help</h3>
+            <p className="font-medium text-sm text-center text-slate-300">Your supporters are eager to collaborate and help you bring your ideas to life.</p>
           </div>
           <div className="item space-y-3 flex flex-col justify-center items-center">
             <Image className="bg-slate-400 rounded-full p-2 text-black" width={88} height={88} src="/coin.gif" alt="Coin" />
-            <p className="font-bold text-center">Your fans are available for you to help you</p>
+            <h3 className="font-bold text-lg text-center">Get Directly Funded</h3>
+            <p className="font-medium text-sm text-center text-slate-300">Receive instant backing in the form of chai purchases directly to your account.</p>
           </div>
           <div className="item space-y-3 flex flex-col justify-center items-center">
             <Image className="bg-slate-400 rounded-full p-2 text-black" width={88} height={88} src="/group.gif" alt="Group" />
-            
-            <p className="font-bold text-center">Your fans are available for you to help you</p>
+            <h3 className="font-bold text-lg text-center">Build a Community</h3>
+            <p className="font-medium text-sm text-center text-slate-300">Grow and deeply engage with your passionate community of loyal followers.</p>
           </div>
         </div>
       </div>
